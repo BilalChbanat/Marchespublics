@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1739974478800-1
+      author: Youcode
+      changes:
+        - sql:
+            sql: "CREATE TYPE user_role AS ENUM ('ADMIN', 'DEPARTMENT', 'COMPANY', 'BID_EVALUATOR', 'USER');"
+      rollback:
+        - sql:
+            sql: "DROP TYPE IF EXISTS user_role;"
