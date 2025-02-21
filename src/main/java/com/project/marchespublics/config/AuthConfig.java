@@ -1,6 +1,5 @@
 package com.project.marchespublics.config;
 
-
 import com.project.marchespublics.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
-public class authConfig {
+public class AuthConfig {
 
     private final UserRepository userRepository;
 

@@ -1,6 +1,5 @@
 package com.project.marchespublics.config;
 
-
 import com.project.marchespublics.model.User;
 import com.project.marchespublics.service.interfaces.auth.JwtService;
 import jakarta.servlet.FilterChain;
@@ -30,6 +29,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
 
+
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -37,6 +37,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
+        final String path = request.getServletPath();
+
+        if (path.startsWith("/auth/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -56,9 +62,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     Long id = null;
                     if(userDetails instanceof User) {
                         id = ((User) userDetails).getId();
-
                     }
-                    logger.info(id);
+                    logger.info(String.valueOf(id));
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             id,
