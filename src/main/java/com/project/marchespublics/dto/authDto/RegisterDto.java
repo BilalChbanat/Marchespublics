@@ -13,6 +13,6 @@ public class RegisterDto {
     private String email;
     private String password;
     private String username;
-    private LocalDate createdAt;
+    private LocalDate created_at;
     private String role;
 }
