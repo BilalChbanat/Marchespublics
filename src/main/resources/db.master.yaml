@@ -4,3 +4,5 @@ databaseChangeLog:
       file: db/changelog/2025/02/19-01-changelog-create-user-role-enum.yaml
   - include:
       file: db/changelog/2025/02/20-01-changelog-create-user-entity.yaml
+  - include:
+      file: db/changelog/2025/02/21-01-changelog-create-categories-table.yaml

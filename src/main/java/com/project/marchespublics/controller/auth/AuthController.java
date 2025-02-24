@@ -1,4 +1,4 @@
-package com.project.marchespublics.controller;
+package com.project.marchespublics.controller.auth;
 
 
 import com.project.marchespublics.config.response.LoginResponse;

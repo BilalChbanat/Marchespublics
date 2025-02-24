@@ -1,9 +1,8 @@
-package com.project.marchespublics.controller;
+package com.project.marchespublics.controller.auth;
 
 
 import com.project.marchespublics.dto.authDto.RegisterDto;
 import com.project.marchespublics.service.interfaces.auth.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
