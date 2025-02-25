@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1740138236519-2
+      author: Youcode
+      changes:
+        - createTable:
+            tableName: categories
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+        - createIndex:
+            indexName: idx_categories_name
+            tableName: categories
+            columns:
+              - column:
+                  name: name
