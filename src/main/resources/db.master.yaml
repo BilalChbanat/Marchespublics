@@ -6,3 +6,5 @@ databaseChangeLog:
       file: db/changelog/2025/02/20-01-changelog-create-user-entity.yaml
   - include:
       file: db/changelog/2025/02/21-01-changelog-create-categories-table.yaml
+  - include:
+      file: db/changelog/2025/02/27-01-changelog-create-companies-table.yaml
