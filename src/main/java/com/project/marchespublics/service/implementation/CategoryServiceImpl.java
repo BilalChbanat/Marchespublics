@@ -3,6 +3,7 @@ package com.project.marchespublics.service.implementation;
 import com.project.marchespublics.dto.CategoryDto;
 import com.project.marchespublics.mapper.CategoryMapper;
 import com.project.marchespublics.model.Category;
+import com.project.marchespublics.model.User;
 import com.project.marchespublics.repository.CategoryRepository;
 import com.project.marchespublics.service.interfaces.CategoryInterface;
 import jakarta.transaction.Transactional;
@@ -47,8 +48,8 @@ public class CategoryServiceImpl implements CategoryInterface {
 
     @Override
     public Page<CategoryDto> findAll(Pageable pageable) {
-        return categoryRepository.findAll(pageable)
-                .map(categoryMapper::toDto);
+        Page<Category> categories = categoryRepository.findAll(pageable);
+        return categories.map(categoryMapper::toDto);
     }
 
     @Override
