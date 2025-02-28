@@ -29,7 +29,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
 
-
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -39,7 +38,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String path = request.getServletPath();
 
-        if (path.startsWith("/auth/") || path.startsWith("/categories/")) {
+        if (path.startsWith("/auth/") || path.startsWith("/categories/") || path.startsWith("/companies/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if (path.startsWith("/categories") || path.startsWith("/companies")) {
             filterChain.doFilter(request, response);
             return;
         }
