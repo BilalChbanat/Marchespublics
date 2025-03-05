@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1741216030660-4
+      author: Youcode
+      changes:
+        - createTable:
+            tableName: departments
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address
+                  type: VARCHAR(255)
+              - column:
+                  name: email
+                  type: VARCHAR(100)
+              - column:
+                  name: phone
+                  type: VARCHAR(20)
+        - createIndex:
+            indexName: idx_departments_name
+            tableName: departments
+            columns:
+              - column:
+                  name: name
+        - createIndex:
+            indexName: idx_departments_email
+            tableName: departments
+            columns:
+              - column:
+                  name: email
+
+  - changeSet:
+      id: add-department-foreign-key-to-users
+      author: marchespublics
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: department_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_users_department
+                    referencedTableName: departments
+                    referencedColumnNames: id
+        - createIndex:
+            indexName: idx_users_department
+            tableName: users
+            columns:
+              - column:
+                  name: department_id
