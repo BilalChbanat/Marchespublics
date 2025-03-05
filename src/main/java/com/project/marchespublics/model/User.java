@@ -50,6 +50,10 @@ public class User implements UserDetails {
     @ManyToMany(mappedBy = "users")
     private List<Company> companies ;
 
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
+
     private boolean enabled;
 
 
