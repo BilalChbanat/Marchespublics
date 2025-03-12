@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1741218961578-8
+      author: Youcode
+      dbms: postgresql
+      changes:
+        - sql:
+            sql: CREATE TYPE publication_status AS ENUM ('DRAFT', 'PUBLISHED', 'CANCELLED', 'COMPLETED');
+      rollback:
+        - sql:
+            sql: DROP TYPE IF EXISTS publication_status;
+
+  # If your database doesn't support ENUM types (e.g., MySQL without ENUM or non-PostgreSQL),
+  # use this alternative with a check constraint
+  - changeSet:
+      id: create-publication-status-check-constraint
+      author: marchespublics
+      dbms: h2, mysql, oracle, mssql
+      changes:
+        - sql:
+            sql: ALTER TABLE publications ADD CONSTRAINT check_publication_status CHECK (status IN ('DRAFT', 'PUBLISHED', 'CANCELLED', 'COMPLETED'));
+      rollback:
+        - sql:
+            sql: ALTER TABLE publications DROP CONSTRAINT check_publication_status;

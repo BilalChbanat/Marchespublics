@@ -10,3 +10,9 @@ databaseChangeLog:
       file: db/changelog/2025/02/27-01-changelog-create-companies-table.yaml
   - include:
       file: db/changelog/2025/03/05-01-changelog-create-departments-table.yaml
+  - include:
+      file: db/changelog/2025/03/05-01-changelog-create-publication-status-enum.yaml
+  - include:
+      file: db/changelog/2025/03/06-01-changelog-create-publications-table.yaml
+  - include:
+      file: db/changelog/2025/03/11-01-changelog-update-size-of-refernceNumber.yaml

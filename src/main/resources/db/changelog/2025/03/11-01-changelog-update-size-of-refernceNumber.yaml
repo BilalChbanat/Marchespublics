@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1741704367527-16
+      author: Youcode
+      changes:
+        - modifyDataType:
+            columnName: reference_number
+            newDataType: VARCHAR(150)
+            tableName: publications
+      rollback:
+        - modifyDataType:
+            columnName: reference_number
+            newDataType: VARCHAR(20)
+            tableName: publications
