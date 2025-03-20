@@ -30,10 +30,21 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginDto loginUserDto){
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginDto loginUserDto) {
+        // Authenticate the user
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
+
+        // Generate token
         String jwtToken = jwtService.generateToken(authenticatedUser);
-        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
+
+        // Create response with user data included
+        LoginResponse loginResponse = new LoginResponse(
+                jwtToken,
+                jwtService.getExpirationTime(),
+                authenticatedUser  // Include the user in the response
+        );
+
+        // Return single response object
         return ResponseEntity.ok(loginResponse);
     }
 

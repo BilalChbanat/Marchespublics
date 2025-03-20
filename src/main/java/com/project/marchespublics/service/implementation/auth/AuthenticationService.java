@@ -56,7 +56,7 @@ public class AuthenticationService {
         }
 
         sendVerificationEmail(user);
-
+        user.setRole(UserRole.valueOf("USER"));
         return userRepository.save(user);
     }
 
@@ -133,7 +133,6 @@ public class AuthenticationService {
         try {
             emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
         } catch (MessagingException e) {
-            // Handle email sending exception
             e.printStackTrace();
         }
     }

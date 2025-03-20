@@ -1,6 +1,5 @@
 package com.project.marchespublics.service.implementation.auth;
 
-
 import com.project.marchespublics.dto.authDto.RegisterDto;
 import com.project.marchespublics.enums.UserRole;
 import com.project.marchespublics.mapper.UserMapper;
@@ -12,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -24,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public RegisterDto create(RegisterDto userDto) {
@@ -31,24 +32,25 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Password cannot be null or empty");
         }
 
+        User user = userMapper.toEntity(userDto);
+
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
         String roleStr = userDto.getRole();
         if (roleStr != null) {
             try {
                 UserRole role = UserRole.valueOf(roleStr.toUpperCase());
-                User user = userMapper.toEntity(userDto);
                 user.setRole(role);
-                user = userRepository.save(user);
-                return userMapper.toDto(user);
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("Invalid role. Must be one of: " +
                         Arrays.toString(UserRole.values()));
             }
         } else {
-            User user = userMapper.toEntity(userDto);
             user.setRole(UserRole.USER);
-            user = userRepository.save(user);
-            return userMapper.toDto(user);
         }
+
+        user = userRepository.save(user);
+        return userMapper.toDto(user);
     }
 
     @Override
@@ -64,18 +66,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RegisterDto update(Long id, RegisterDto userDto) {
-        User user = findById(id);
+        User existingUser = findById(id);
+        if (existingUser == null) {
+            throw new RuntimeException("User with id " + id + " not found");
+        }
 
-        User usertoUpdate = userMapper.toEntity(userDto);
-        usertoUpdate.setId(id);
+        User updatedUser = userMapper.toEntity(userDto);
+        updatedUser.setId(id);
+        updatedUser.setRole(existingUser.getRole());
 
-        User updatedUser = userRepository.save(usertoUpdate);
+        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+            updatedUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        } else {
+            updatedUser.setPassword(existingUser.getPassword());
+        }
+
+        updatedUser = userRepository.save(updatedUser);
         return userMapper.toDto(updatedUser);
     }
 
     @Override
     public void delete(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User with id " + id + " not found"));
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User with id " + id + " not found"));
         userRepository.delete(user);
     }
 
@@ -84,5 +97,4 @@ public class UserServiceImpl implements UserService {
         Page<User> users = userRepository.findByRole(role, pageable);
         return users.map(userMapper::toDto);
     }
-
 }
