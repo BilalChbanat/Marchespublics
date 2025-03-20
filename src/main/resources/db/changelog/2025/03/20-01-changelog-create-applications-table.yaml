@@ -1,0 +1,297 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20240320-01-create-applications-table
+      author: marchespublics
+      changes:
+        - createTable:
+            tableName: applications
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: publication_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_application_publication
+                    references: publications(id)
+              - column:
+                  name: company_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_application_company
+                    references: companies(id)
+              - column:
+                  name: submission_date
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cover_letter_path
+                  type: varchar(500)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: proposed_budget
+                  type: decimal(19, 2)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: datetime
+                  defaultValueDate: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: datetime
+                  defaultValueDate: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: applications
+            columnNames: publication_id, company_id
+            constraintName: uk_application_pub_company
+        - createIndex:
+            tableName: applications
+            indexName: idx_application_publication_id
+            columns:
+              - column:
+                  name: publication_id
+        - createIndex:
+            tableName: applications
+            indexName: idx_application_company_id
+            columns:
+              - column:
+                  name: company_id
+        - createIndex:
+            tableName: applications
+            indexName: idx_application_status
+            columns:
+              - column:
+                  name: status
+
+  - changeSet:
+      id: 20240320-02-create-application-documents-table
+      author: marchespublics
+      changes:
+        - createTable:
+            tableName: application_documents
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: application_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_app_document_application
+                    references: applications(id)
+              - column:
+                  name: file_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_type
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_path
+                  type: varchar(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_size
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: upload_date
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: document_type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: application_documents
+            indexName: idx_app_document_application_id
+            columns:
+              - column:
+                  name: application_id
+
+  - changeSet:
+      id: 20240320-03-create-application-comments-table
+      author: marchespublics
+      changes:
+        - createTable:
+            tableName: application_comments
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: application_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_app_comment_application
+                    references: applications(id)
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_app_comment_user
+                    references: users(id)
+              - column:
+                  name: comment
+                  type: varchar(1000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: datetime
+                  defaultValueDate: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: application_comments
+            indexName: idx_app_comment_application_id
+            columns:
+              - column:
+                  name: application_id
+
+  - changeSet:
+      id: 20240320-04-create-application-evaluations-table
+      author: marchespublics
+      changes:
+        - createTable:
+            tableName: application_evaluations
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: application_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_app_eval_application
+                    references: applications(id)
+              - column:
+                  name: criteria_name
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: score
+                  type: decimal(5, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: evaluator_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_app_eval_user
+                    references: users(id)
+              - column:
+                  name: notes
+                  type: varchar(500)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: evaluation_date
+                  type: datetime
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: application_evaluations
+            indexName: idx_app_eval_application_id
+            columns:
+              - column:
+                  name: application_id
+
+  - changeSet:
+      id: 20240320-05-create-application-status-history-table
+      author: marchespublics
+      changes:
+        - createTable:
+            tableName: application_status_history
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: application_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_app_status_application
+                    references: applications(id)
+              - column:
+                  name: old_status
+                  type: varchar(20)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: new_status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: changed_by
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_app_status_user
+                    references: users(id)
+              - column:
+                  name: change_date
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reason
+                  type: varchar(500)
+                  constraints:
+                    nullable: true
+        - createIndex:
+            tableName: application_status_history
+            indexName: idx_app_status_application_id
+            columns:
+              - column:
+                  name: application_id
