@@ -11,9 +11,11 @@ public interface CompanyInterface {
 
     CompanyDto save(CompanyDto companyDto);
     CompanyDto update(CompanyDto companyDto);
-    Optional<CompanyDto> findById(int id);
+    Optional<CompanyDto> findById(Long id);
     Page<CompanyDto> findAll(Pageable pageable);
     List<CompanyDto> findByName(String name);
+    Optional<CompanyDto> findByUserId(Long userId);
     void delete(int id);
+    List<CompanyDto> findAllByUserId(Long userId);
 
 }

@@ -45,4 +45,11 @@ public class DepartmentController {
     public ResponseEntity<DepartmentDto> getDepartment(@PathVariable int id) {
         return departmentService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<DepartmentDto> getDepartmentByUserId(@PathVariable Long userId) {
+        return departmentService.findByUserId(userId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

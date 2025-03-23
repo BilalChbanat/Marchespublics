@@ -34,4 +34,7 @@ public class CompanyDto {
 
     @Email(message = "Invalid email format")
     private String email;
+
+    @NotNull(message = "User error")
+    private Long userId;
 }

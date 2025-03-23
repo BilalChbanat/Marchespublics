@@ -18,3 +18,5 @@ databaseChangeLog:
       file: db/changelog/2025/03/11-01-changelog-update-size-of-refernceNumber.yaml
   - include:
       file: db/changelog/2025/03/20-01-changelog-create-applications-table.yaml
+  - include:
+      file: db/changelog/2025/03/22-01-changelog-add-user-id-to-companies.yaml

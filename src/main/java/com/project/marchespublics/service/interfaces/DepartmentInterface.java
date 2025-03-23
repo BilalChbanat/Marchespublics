@@ -13,4 +13,5 @@ public interface DepartmentInterface {
     Optional<DepartmentDto> findById(Integer id);
     Page<DepartmentDto> findAll(Pageable pageable);
     void delete(int id);
+    Optional<DepartmentDto> findByUserId(Long userId);
 }

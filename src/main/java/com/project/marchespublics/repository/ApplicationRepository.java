@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
-    Page<Application> findByPublicationId(Long publicationId, Pageable pageable);
     Page<Application> findByCompanyId(Long companyId, Pageable pageable);
+    Page<Application> findByPublicationId(Long publicationId, Pageable pageable);
     boolean existsByPublicationIdAndCompanyId(Long publicationId, Long companyId);
 }

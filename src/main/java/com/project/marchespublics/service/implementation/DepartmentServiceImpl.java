@@ -65,4 +65,10 @@ public class DepartmentServiceImpl implements DepartmentInterface {
         }
         departmentRepository.deleteById((long) id);
     }
+
+    @Override
+    public Optional<DepartmentDto> findByUserId(Long userId) {
+        return departmentRepository.findByUserId(userId)
+                .map(departmentMapper::toDto);
+    }
 }

@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20240322-01-add-user-id-to-companies
+      author: youcode
+      changes:
+        - addColumn:
+            tableName: companies
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_company_user
+                    references: users(id)
+
+        - createIndex:
+            tableName: companies
+            indexName: idx_company_user_id
+            columns:
+              - column:
+                  name: user_id

@@ -1,6 +1,5 @@
 package com.project.marchespublics.controller;
 
-import com.project.marchespublics.dto.CategoryDto;
 import com.project.marchespublics.dto.CompanyDto;
 import com.project.marchespublics.service.implementation.CompanyServiceImpl;
 import jakarta.validation.Valid;
@@ -9,6 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/companies")
@@ -36,8 +38,8 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CompanyDto> deleteCompany(@PathVariable int id) {
-        companyService.delete(id);
+    public ResponseEntity<Void> deleteCompany(@PathVariable Long id) {
+        companyService.delete(Math.toIntExact(id));
         return ResponseEntity.noContent().build();
     }
 
@@ -49,9 +51,21 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CompanyDto> getCompany(@PathVariable int id) {
-
+    public ResponseEntity<CompanyDto> getCompany(@PathVariable Long id) {
         return companyService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<CompanyDto> getCompanyByUserId(@PathVariable Long userId) {
+        return companyService.findByUserId(userId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/user/{userId}/all")
+    public ResponseEntity<List<CompanyDto>> getCompaniesByUserId(@PathVariable Long userId) {
+        List<CompanyDto> companies = companyService.findAllByUserId(userId);
+        return ResponseEntity.ok(companies);
     }
 
 }

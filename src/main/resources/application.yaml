@@ -25,6 +25,12 @@ spring:
     username: bilal.chbanat2003@gmail.com
     password: aeebbfhlpekagpqr
 
+  # File upload configuration
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
 server:
   port: 8080  # Define the port your application will run on
 
@@ -38,3 +44,7 @@ security:
   jwt:
     secret-key: 134256378948371526789301823781252891527531226784172461624626416451271264671526456125416246241247165246124615624516541171245164615124124
     expiration-time: 87468712649
+
+# Custom application properties
+file:
+  upload-dir: uploads

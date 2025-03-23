@@ -4,6 +4,7 @@ import com.project.marchespublics.dto.CompanyDto;
 import com.project.marchespublics.mapper.CompanyMapper;
 import com.project.marchespublics.model.Company;
 import com.project.marchespublics.repository.CompanyRepository;
+import com.project.marchespublics.repository.UserRepository;
 import com.project.marchespublics.service.interfaces.CompanyInterface;
 import com.project.marchespublics.util.DuplicateResourceException;
 import com.project.marchespublics.util.InvalidDataException;
@@ -25,6 +26,7 @@ public class CompanyServiceImpl implements CompanyInterface {
 
     private final CompanyRepository companyRepository;
     private final CompanyMapper companyMapper;
+    private final UserRepository userRepository;
 
     @Override
     public CompanyDto save(CompanyDto companyDto) {
@@ -40,6 +42,14 @@ public class CompanyServiceImpl implements CompanyInterface {
             throw new DuplicateResourceException("Company with name '" + companyDto.getName() + "' already exists");
         }
 
+        if (companyDto.getUserId() == null) {
+            throw new InvalidDataException("User ID is required");
+        }
+
+        if (!userRepository.existsById(companyDto.getUserId())) {
+            throw new ResourceNotFoundException("User with ID " + companyDto.getUserId() + " not found");
+        }
+
         Company company = companyMapper.toEntity(companyDto);
         company = companyRepository.save(company);
         return companyMapper.toDto(company);
@@ -47,7 +57,7 @@ public class CompanyServiceImpl implements CompanyInterface {
 
     @Override
     public CompanyDto update(CompanyDto companyDto) {
-        if (companyDto.getId() == 0) {
+        if (companyDto.getId() == null || companyDto.getId() == 0) {
             throw new InvalidDataException("Company ID cannot be null or zero");
         }
 
@@ -56,8 +66,16 @@ public class CompanyServiceImpl implements CompanyInterface {
         }
 
         Optional<Company> existingCompanyWithSameName = companyRepository.findByNameIgnoreCase(companyDto.getName());
-        if (existingCompanyWithSameName.isPresent() && existingCompanyWithSameName.get().getId() != companyDto.getId()) {
+        if (existingCompanyWithSameName.isPresent() && !existingCompanyWithSameName.get().getId().equals(companyDto.getId())) {
             throw new DuplicateResourceException("Company with name '" + companyDto.getName() + "' already exists");
+        }
+
+        if (companyDto.getUserId() == null) {
+            throw new InvalidDataException("User ID is required");
+        }
+
+        if (!userRepository.existsById(companyDto.getUserId())) {
+            throw new ResourceNotFoundException("User with ID " + companyDto.getUserId() + " not found");
         }
 
         Company company = companyMapper.toEntity(companyDto);
@@ -66,8 +84,8 @@ public class CompanyServiceImpl implements CompanyInterface {
     }
 
     @Override
-    public Optional<CompanyDto> findById(int id) {
-        Optional<Company> company = companyRepository.findById(id);
+    public Optional<CompanyDto> findById(Long id) {
+        Optional<Company> company = companyRepository.findById(Math.toIntExact(id));
 
         if (company.isEmpty()) {
             throw new ResourceNotFoundException("Company with ID " + id + " not found");
@@ -100,10 +118,26 @@ public class CompanyServiceImpl implements CompanyInterface {
     }
 
     @Override
+    public Optional<CompanyDto> findByUserId(Long userId) {
+        return companyRepository.findByUserId(userId)
+                .map(companyMapper::toDto);
+    }
+
+    @Override
     public void delete(int id) {
         if (!companyRepository.existsById(id)) {
             throw new ResourceNotFoundException("Company with ID " + id + " not found");
         }
         companyRepository.deleteById(id);
+    }
+
+    @Override
+    public List<CompanyDto> findAllByUserId(Long userId) {
+        List<CompanyDto> companies = companyRepository.findAllByUserId(userId)
+                .stream()
+                .map(companyMapper::toDto)
+                .collect(Collectors.toList());
+
+        return companies;
     }
 }

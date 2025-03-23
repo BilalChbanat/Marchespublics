@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/companies/**").permitAll()
                         .requestMatchers("/departments/**").permitAll()
                         .requestMatchers("/pubs/**").permitAll()
+                        .requestMatchers("/files/**").permitAll()
                         .requestMatchers("/pubs/**").permitAll()
                         .requestMatchers("/applications/**").permitAll()
                         .requestMatchers("/users/**").hasAnyRole("ADMIN", "DEPARTMENT","USER")

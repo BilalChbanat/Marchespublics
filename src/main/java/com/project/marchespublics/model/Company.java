@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "companies")
@@ -35,11 +33,11 @@ public class Company {
     @Column(name = "email")
     private String email;
 
-    @ManyToMany
-    @JoinTable(
-            name = "company_users",
-            joinColumns = @JoinColumn(name = "company_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<User> users = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public boolean belongsToUser(Long userId) {
+        return user != null && user.getId().equals(userId);
+    }
 }

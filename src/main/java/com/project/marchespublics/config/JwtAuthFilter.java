@@ -38,12 +38,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String path = request.getServletPath();
 
-        if (path.startsWith("/auth/") || path.startsWith("/categories/") || path.startsWith("/companies/") || path.startsWith("/departments/") || path.startsWith("/users/") || path.startsWith("/pubs/") || path.startsWith("/applications/") || path.startsWith("/applications/company/") || path.startsWith("/applications/publication/") || path.startsWith("/applications/**/status") || path.startsWith("/applications/check")) {
+        if (path.startsWith("/auth/") || path.startsWith("/categories/") || path.startsWith("/companies/user/") || path.startsWith("/companies/") || path.startsWith("/departments/") ||path.startsWith("/departments/user/") || path.startsWith("/users/") || path.startsWith("/pubs/") || path.startsWith("/applications/") || path.startsWith("/files/") || path.startsWith("/applications/company/") || path.startsWith("/applications/publication/") || path.startsWith("/applications/**/status") || path.startsWith("/applications/check") ) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        if (path.startsWith("/categories") || path.startsWith("/companies") || path.startsWith("/departments") || path.startsWith("/users") || path.startsWith("/pubs") || path.startsWith("/applications") ) {
+        if (path.startsWith("/categories") || path.startsWith("/companies/user") || path.startsWith("/companies") || path.startsWith("/departments") || path.startsWith("/users") || path.startsWith("/pubs") ||path.startsWith("/departments/user") || path.startsWith("/applications") || path.startsWith("/files") ) {
             filterChain.doFilter(request, response);
             return;
         }
