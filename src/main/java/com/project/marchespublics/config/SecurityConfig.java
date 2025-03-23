@@ -37,7 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/files/**").permitAll()
                         .requestMatchers("/pubs/**").authenticated()
                         .requestMatchers("/applications/**").permitAll()
-                        .requestMatchers("/users/**").hasAnyRole("ADMIN", "DEPARTMENT","USER")
+                        .requestMatchers("/users/**").hasAnyRole("ADMIN", "DEPARTMENT", "USER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

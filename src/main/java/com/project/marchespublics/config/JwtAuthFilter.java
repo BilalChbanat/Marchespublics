@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,6 +21,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +31,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final HandlerExceptionResolver handlerExceptionResolver;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-
 
     @Override
     protected void doFilterInternal(
@@ -38,12 +41,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String path = request.getServletPath();
 
-        if (path.startsWith("/auth/") || path.startsWith("/categories/") || path.startsWith("/companies/user/") || path.startsWith("/companies/") || path.startsWith("/departments/") ||path.startsWith("/departments/user/") || path.startsWith("/users/") || path.startsWith("/pubs/") || path.startsWith("/applications/") || path.startsWith("/files/") || path.startsWith("/applications/company/") || path.startsWith("/applications/publication/") || path.startsWith("/applications/**/status") || path.startsWith("/applications/check") || path.startsWith("/pubs/user/")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        if (path.startsWith("/categories") || path.startsWith("/companies/user") || path.startsWith("/companies") || path.startsWith("/departments") || path.startsWith("/users") || path.startsWith("/pubs") ||path.startsWith("/departments/user") || path.startsWith("/applications") || path.startsWith("/files") || path.startsWith("/pubs/user") || path.startsWith("/pubs/department/") ) {
+        if (shouldSkipAuth(path)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -64,14 +62,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                 if (jwtService.isTokenValid(jwt, userDetails)) {
                     Long id = null;
-                    if(userDetails instanceof User) {
-                        id = ((User) userDetails).getId();
+                    List<GrantedAuthority> authorities = new ArrayList<>();
+
+                    if (userDetails instanceof User) {
+                        User user = (User) userDetails;
+                        id = user.getId();
+                        if (user.getRole() != null) {
+                            authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
+                        }
                     }
-                    logger.info(String.valueOf(id));
+
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             id,
-                            userDetails.getAuthorities()
+                            authorities
                     );
 
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -83,5 +87,34 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         } catch (Exception exception) {
             handlerExceptionResolver.resolveException(request, response, null, exception);
         }
+    }
+
+    private boolean shouldSkipAuth(String path) {
+        return path.startsWith("/auth/") ||
+                path.startsWith("/categories/") ||
+                path.startsWith("/companies/user/") ||
+                path.startsWith("/companies/") ||
+                path.startsWith("/departments/") ||
+                path.startsWith("/departments/user/") ||
+                path.startsWith("/users/") ||
+                path.startsWith("/pubs/") ||
+                path.startsWith("/applications/") ||
+                path.startsWith("/files/") ||
+                path.startsWith("/applications/company/") ||
+                path.startsWith("/applications/publication/") ||
+                path.startsWith("/applications/**/status") ||
+                path.startsWith("/applications/check") ||
+                path.startsWith("/pubs/user/") ||
+                path.startsWith("/categories") ||
+                path.startsWith("/companies/user") ||
+                path.startsWith("/companies") ||
+                path.startsWith("/departments") ||
+                path.startsWith("/users") ||
+                path.startsWith("/pubs") ||
+                path.startsWith("/departments/user") ||
+                path.startsWith("/applications") ||
+                path.startsWith("/files") ||
+                path.startsWith("/pubs/user") ||
+                path.startsWith("/pubs/department/");
     }
 }
