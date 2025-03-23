@@ -37,13 +37,13 @@ public class DepartmentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDepartment(@PathVariable int id) {
-        departmentService.delete(id);
+        departmentService.delete((long) id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DepartmentDto> getDepartment(@PathVariable int id) {
-        return departmentService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return departmentService.findById((long) id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/user/{userId}")

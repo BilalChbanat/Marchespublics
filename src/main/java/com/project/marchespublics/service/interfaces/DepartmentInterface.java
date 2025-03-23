@@ -10,8 +10,8 @@ public interface DepartmentInterface {
 
     DepartmentDto save(DepartmentDto departmentDto);
     DepartmentDto update(DepartmentDto departmentDto);
-    Optional<DepartmentDto> findById(Integer id);
+    Optional<DepartmentDto> findById(Long id);
     Page<DepartmentDto> findAll(Pageable pageable);
-    void delete(int id);
+    void delete(Long id);
     Optional<DepartmentDto> findByUserId(Long userId);
 }

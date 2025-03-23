@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20240323-01-add-user-id-to-departments
+      author: youcode
+      changes:
+        - addColumn:
+            tableName: departments
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_department_user
+                    references: users(id)
+
+        - createIndex:
+            tableName: departments
+            indexName: idx_department_user_id
+            columns:
+              - column:
+                  name: user_id

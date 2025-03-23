@@ -1,6 +1,8 @@
 package com.project.marchespublics.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -30,8 +32,9 @@ public class Department {
     @Column(name = "phone")
     private String phone;
 
-    @OneToMany(mappedBy = "department")
-    private List<User> users ;
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @NotNull
+    private User user;
 }

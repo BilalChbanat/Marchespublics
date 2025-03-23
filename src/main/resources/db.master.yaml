@@ -20,3 +20,5 @@ databaseChangeLog:
       file: db/changelog/2025/03/20-01-changelog-create-applications-table.yaml
   - include:
       file: db/changelog/2025/03/22-01-changelog-add-user-id-to-companies.yaml
+  - include:
+      file: db/changelog/2025/03/23-01-changelog-add-userIdTo-deparmtent.yaml

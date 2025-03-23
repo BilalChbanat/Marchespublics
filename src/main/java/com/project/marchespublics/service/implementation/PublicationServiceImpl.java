@@ -6,9 +6,11 @@ import com.project.marchespublics.mapper.PublicationMapper;
 import com.project.marchespublics.model.Category;
 import com.project.marchespublics.model.Department;
 import com.project.marchespublics.model.Publication;
+import com.project.marchespublics.model.User;
 import com.project.marchespublics.repository.CategoryRepository;
 import com.project.marchespublics.repository.DepartmentRepository;
 import com.project.marchespublics.repository.PublicationRepository;
+import com.project.marchespublics.repository.UserRepository;
 import com.project.marchespublics.service.interfaces.PublicationInterface;
 import com.project.marchespublics.util.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +36,7 @@ public class PublicationServiceImpl implements PublicationInterface {
 
     private final CategoryRepository categoryRepository;
     private final DepartmentRepository departmentRepository;
+    private final UserRepository userRepository;
 
     @Override
     public PublicationDto save(PublicationDto publicationDto) {
@@ -107,9 +112,36 @@ public class PublicationServiceImpl implements PublicationInterface {
     }
 
     @Override
+    public List<PublicationDto> findByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        // If user has a department
+        if (user.getDepartment() != null) {
+            return publicationRepository.findByDepartmentId(user.getDepartment().getId())
+                    .stream()
+                    .map(publicationMapper::toDto)
+                    .collect(Collectors.toList());
+        }
+
+        // Alternative approach: Use the query that joins departments and users
+        return publicationRepository.findByUserDepartment(userId)
+                .stream()
+                .map(publicationMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Page<PublicationDto> findAll(Pageable pageable) {
         return publicationRepository.findAll(pageable)
                 .map(publicationMapper::toDto);
+    }
+
+    public List<PublicationDto> findByDepartmentId(Long departmentId) {
+        List<Publication> publications = publicationRepository.findByDepartment_Id(departmentId);
+        return publications.stream()
+                .map(publicationMapper::toDto)
+                .collect(Collectors.toList());
     }
 
 

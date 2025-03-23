@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -48,5 +49,16 @@ public class PublicationController {
     public ResponseEntity<Optional<PublicationDto>> getPublication(@PathVariable Long id) {
         Optional<PublicationDto> result = publicationService.findById(id);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<PublicationDto>> getPublicationsByUserId(@PathVariable Long userId) {
+        List<PublicationDto> publications = publicationService.findByUserId(userId);
+        return ResponseEntity.ok(publications);
+    }
+    @GetMapping("/department/{departmentId}")
+    public ResponseEntity<List<PublicationDto>> getPublicationsByDepartment(@PathVariable Long departmentId) {
+        List<PublicationDto> publications = publicationService.findByDepartmentId(departmentId);
+        return ResponseEntity.ok(publications);
     }
 }
