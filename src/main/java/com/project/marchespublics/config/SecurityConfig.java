@@ -35,7 +35,7 @@ public class SecurityConfig {
                         .requestMatchers("/departments/**").permitAll()
                         .requestMatchers("/pubs/**").permitAll()
                         .requestMatchers("/files/**").permitAll()
-                        .requestMatchers("/pubs/**").permitAll()
+                        .requestMatchers("/pubs/**").authenticated()
                         .requestMatchers("/applications/**").permitAll()
                         .requestMatchers("/users/**").hasAnyRole("ADMIN", "DEPARTMENT","USER")
                         .anyRequest().authenticated()

@@ -124,7 +124,6 @@ public class PublicationServiceImpl implements PublicationInterface {
                     .collect(Collectors.toList());
         }
 
-        // Alternative approach: Use the query that joins departments and users
         return publicationRepository.findByUserDepartment(userId)
                 .stream()
                 .map(publicationMapper::toDto)
