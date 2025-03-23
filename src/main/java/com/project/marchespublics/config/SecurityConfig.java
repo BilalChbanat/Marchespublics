@@ -3,6 +3,7 @@ package com.project.marchespublics.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,6 +38,9 @@ public class SecurityConfig {
                         .requestMatchers("/files/**").permitAll()
                         .requestMatchers("/pubs/**").authenticated()
                         .requestMatchers("/applications/**").permitAll()
+                        .requestMatchers("/applications/publication/**").hasAnyRole("USER", "ADMIN", "DEPARTMENT")
+                        .requestMatchers(HttpMethod.PATCH,"/applications/**/status").permitAll()
+                        .requestMatchers("/applications/**").authenticated()
                         .requestMatchers("/users/**").hasAnyRole("ADMIN", "DEPARTMENT", "USER")
                         .anyRequest().authenticated()
                 )
@@ -53,7 +57,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:8080"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","PATCH" , "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
 

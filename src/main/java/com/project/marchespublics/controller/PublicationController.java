@@ -26,7 +26,8 @@ public class PublicationController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PublicationDto>> getAll(Pageable pageable) {
+    public ResponseEntity<Page<PublicationDto>> getAll() {
+         Pageable pageable = Pageable.ofSize(200).withPage(0);
          Page<PublicationDto> result = publicationService.findAll(pageable);
          return ResponseEntity.ok(result);
     }

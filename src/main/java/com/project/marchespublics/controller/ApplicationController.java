@@ -69,8 +69,10 @@ public class ApplicationController {
 
 
     @GetMapping("/publication/{publicationId}")
-    public ResponseEntity<Page<Application>> getByPublication(@PathVariable Long publicationId, Pageable pageable) {
-        return ResponseEntity.ok(applicationService.findByPublicationId(publicationId, pageable));
+    public ResponseEntity<Page<ApplicationDto>> getByPublication(@PathVariable Long publicationId, Pageable pageable) {
+        Page<Application> applications = applicationService.findByPublicationId(publicationId, pageable);
+        Page<ApplicationDto> applicationDtos = applications.map(applicationMapper::toDto);
+        return ResponseEntity.ok(applicationDtos);
     }
 
     @GetMapping("/{id}")
@@ -80,7 +82,7 @@ public class ApplicationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}/status")
+    @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('ADMIN') or hasRole('DEPARTMENT')")
     public ResponseEntity<ApplicationDto> updateStatus(
             @PathVariable Long id,

@@ -1,6 +1,5 @@
 package com.project.marchespublics.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.project.marchespublics.enums.PublicationStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -44,7 +43,6 @@ public class Publication {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
-    @JsonBackReference("category-publications")
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
