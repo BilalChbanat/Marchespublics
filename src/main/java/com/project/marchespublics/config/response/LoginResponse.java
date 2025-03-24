@@ -3,6 +3,8 @@ package com.project.marchespublics.config.response;
 import com.project.marchespublics.model.User;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.Collections;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,10 +25,13 @@ public class LoginResponse {
     }
 
     private UserDTO convertToUserDTO(User user) {
+        List<String> roles = Collections.singletonList(String.valueOf(user.getRole()));
+
         return new UserDTO(
                 user.getId(),
                 user.getUsername(),
-                user.getEmail()
+                user.getEmail(),
+                roles
         );
     }
 
@@ -36,11 +41,19 @@ public class LoginResponse {
         private Long id;
         private String username;
         private String email;
+        private List<String> roles;
 
         public UserDTO(Long id, String username, String email) {
             this.id = id;
             this.username = username;
             this.email = email;
+        }
+
+        public UserDTO(Long id, String username, String email, List<String> roles) {
+            this.id = id;
+            this.username = username;
+            this.email = email;
+            this.roles = roles;
         }
     }
 }
