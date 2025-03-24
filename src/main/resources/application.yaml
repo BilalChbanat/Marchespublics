@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/marchepublic
+    url: jdbc:postgresql://host.docker.internal:5432/marchepublic
     username: admin
     password: admin
     driver-class-name: org.postgresql.Driver
